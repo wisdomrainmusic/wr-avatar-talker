@@ -1,0 +1,12 @@
+{
+  "calm": {
+    "motion_scale": 0.15,
+    "head_rotation": 0.05,
+    "eye_blink": true
+  },
+  "normal": {
+    "motion_scale": 0.30,
+    "head_rotation": 0.12,
+    "eye_blink": true
+  }
+}
