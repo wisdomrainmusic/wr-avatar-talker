@@ -1,5 +1,4 @@
-torch
-torchaudio
-opencv-python
 numpy
 tqdm
+opencv-python
+Pillow
