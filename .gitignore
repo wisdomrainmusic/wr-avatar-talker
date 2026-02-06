@@ -207,8 +207,10 @@ marimo/_lsp/
 __marimo__/
 
 # Local-only heavy assets
-models/
-output/
+models/*
+!models/.gitkeep
+output/*
+!output/.gitkeep
 *.mp4
 *.wav
 *.mp3
