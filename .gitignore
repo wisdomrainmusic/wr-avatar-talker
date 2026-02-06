@@ -205,3 +205,15 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Local-only heavy assets
+models/
+output/
+*.mp4
+*.wav
+*.mp3
+
+# Python
+.venv/
+__pycache__/
+*.pyc
