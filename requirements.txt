@@ -2,3 +2,5 @@ numpy
 tqdm
 opencv-python
 Pillow
+PyQt6
+pyinstaller
