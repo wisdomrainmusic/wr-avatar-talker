@@ -6,6 +6,32 @@ import os
 import sys
 
 
+def repo_root() -> Path:
+    return Path(__file__).resolve().parents[1]
+
+
+def resolve_ffmpeg_path() -> str:
+    """
+    Resolve ffmpeg path for:
+    - PyInstaller bundled EXE
+    - Dev (system ffmpeg)
+    """
+    # PyInstaller runtime
+    if getattr(sys, "frozen", False):
+        base = Path(sys._MEIPASS)
+        ffmpeg_path = base / "ffmpeg.exe"
+        if ffmpeg_path.exists():
+            return str(ffmpeg_path)
+
+    # Repo-local ffmpeg
+    local_ffmpeg = repo_root() / "ffmpeg" / "ffmpeg.exe"
+    if local_ffmpeg.exists():
+        return str(local_ffmpeg)
+
+    # Fallback to PATH
+    return "ffmpeg"
+
+
 def run_cmd(cmd: list[str]) -> None:
     print("\n> " + " ".join(cmd) + "\n")
     subprocess.check_call(cmd)
@@ -25,7 +51,7 @@ def find_latest_mp4(folder: Path) -> Path:
 
 def check_ffmpeg() -> None:
     try:
-        subprocess.check_call(["ffmpeg", "-version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.check_call([resolve_ffmpeg_path(), "-version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception:
         raise RuntimeError("ffmpeg not found in PATH. Install ffmpeg or add it to PATH.")
 
@@ -45,7 +71,7 @@ def postprocess_reels(input_mp4: Path, output_mp4: Path) -> None:
     vf = "scale=-2:1920,crop=1080:1920"
 
     run_cmd([
-        "ffmpeg", "-y",
+        resolve_ffmpeg_path(), "-y",
         "-i", str(input_mp4),
         "-vf", vf,
         "-r", "30",
@@ -82,8 +108,7 @@ def main():
     if not audio.exists():
         raise FileNotFoundError(f"Audio not found: {audio}")
 
-    repo_root = Path(__file__).resolve().parents[1]
-    sadtalker_dir = repo_root / "third_party" / "SadTalker"
+    sadtalker_dir = repo_root() / "third_party" / "SadTalker"
     inference_py = sadtalker_dir / "inference.py"
 
     if not inference_py.exists():
@@ -106,7 +131,7 @@ def main():
     # 1) Trim audio to max_seconds + convert to 16k mono wav (SadTalker-friendly)
     trimmed_audio = out_path.parent / "audio_trimmed.wav"
     run_cmd([
-        "ffmpeg", "-y",
+        resolve_ffmpeg_path(), "-y",
         "-i", str(audio),
         "-t", str(args.max_seconds),
         "-ac", "1",

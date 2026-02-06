@@ -52,6 +52,9 @@ Output:
 dist/WR-Avatar-Talker/WR-Avatar-Talker.exe
 ```
 
+### FFmpeg
+FFmpeg is bundled into the Windows EXE.
+No external installation or PATH setup is required.
+
 Notes:
-- Place ffmpeg/ffmpeg.exe next to the exe (or ensure ffmpeg is in PATH)
 - Place models/ folder next to the exe (local-only, not committed)
